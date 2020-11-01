@@ -36,7 +36,7 @@ for ueb in $UEBUNGEN; do
     fi
     log "INF" "Compiling $ueb/main.tex"
     # quiet compile
-    cd $ueb && pdflatex main.tex > /dev/null 2>&1 && cd ..
+    cd $ueb && pdflatex -halt-on-error main.tex > /dev/null 2>&1 && cd ..
     if [[ ! -f $ueb/main.pdf ]]; then
         log "ERR" "Failed to compile $ueb/main.tex"
         exit 1
