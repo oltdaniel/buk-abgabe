@@ -5,6 +5,13 @@ LaTeX Class file so it can be easier used across documents. Additionally I
 added a config to extract the variables for the student names and exercise
 number.
 
+Import this project by visiting [`GitHub Import Repository`](https://github.com/new/import)
+and provide the url `https://github.com/oltdaniel/buk-abgabe.git`. I would suggest
+the repo name `buk-wise2021` and the repository state `private`.
+
+> **NOTE**: I suggest getting a student account [here](https://education.github.com/pack) to
+be able to have the full experience in a private repository.
+
 ## Structure
 
 The different uebungen should follow the same direcotry name schema with `ueb`
