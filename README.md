@@ -50,6 +50,15 @@ In order to use this stuff:
 I added a GitHub Action that will compile all files and upload them as an artifact
 for each build. Example: [`initial commit`](https://github.com/oltdaniel/buk-abgabe/actions/runs/340581520).
 
+If you require a full texlive setup with all packages, consider changing the `compile.yml`.
+
+```diff
+# ...
+-      - uses: xu-cheng/texlive-action/small@v1
+# change this to:
++      - uses: xu-cheng/texlive-action/full@v1
+```
+
 ## Copyright
 
 > Contents of `example.tex` and every line that is part of it and has been reused
