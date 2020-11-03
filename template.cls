@@ -49,6 +49,7 @@
 \newcommand{\uebungsnr}{0}
 \newcommand{\setuebungsnr}[1]{\renewcommand{\uebungsnr}{#1}}
 \newcommand{\tutorium}{99}
+\newcommand{\gruppe}{42}
 
 % Weitere pakete
 \usepackage{multicol}
