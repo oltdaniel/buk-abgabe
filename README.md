@@ -59,6 +59,50 @@ If you require a full texlive setup with all packages, consider changing the `co
 +      - uses: xu-cheng/texlive-action/full@v1
 ```
 
+### E-Mails with the PDFs
+
+The current action is only upload the PDFs as an .zip which can only be downloaded through
+the github website. This is ugly and not useful. That is why, you can add some lines and
+store some secrets in your fork/private repo and receive emails that always include all pdfs.
+
+1. **Add some code**: Open `.github/workflows/compile.yml` and append this code:
+```yaml
+# other action stuff
+      - name: Extract pdf filenames
+        id: extract-filenames
+        run: |
+          FILENAMES=$(find ./out -type f -name "*.pdf" | tr '\n' ',')
+          echo "Found $FILENAMES"
+          echo "::set-output name=PDFS::${FILENAMES%,}"
+      - name: Send email with all pdfs
+        uses: dawidd6/action-send-mail@v2
+        with:
+          server_address: m.oltdaniel.at
+          server_port: 465
+          username: ${{secrets.MAIL_USERNAME}}
+          password: ${{secrets.MAIL_PASSWORD}}
+          subject: Automated BuK PDFs
+          body: All documents have been generated and attached here.
+          from: ${{secrets.MAIL_USERNAME}}
+          to: ${{secrets.MAIL_RECEIVERS}}
+          attachments: ${{steps.extract-filenames.outputs.PDFS}}
+```
+
+2. **Change server**: Make sure to change the server settings.
+```diff
+-          server_address: m.oltdaniel.at
+-          server_port: 465
++          server_address: smtp.gmail.com
++          server_port: 25 # don't use this port
+```
+
+3. **Secrets**: We need 3 secrets. `MAIL_USERNAME`, `MAIL_PASSWORD` and `MAIL_RECEIVERS`.
+  You can add those in your repository settings under Secrets. `MAIL_USERNAME` and `MAIL_PASSWORD`
+  will represent your login crendetials to your mail service. `MAIL_RECEIVERS` is a comma separated
+  list of receivers that you will send this email to.
+
+4. **Done.** Start writing some smart words into your TeX documents.
+
 ## Copyright
 
 > Contents of `example.tex` and every line that is part of it and has been reused
