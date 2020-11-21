@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # get all folders that are important to us
-UEBUNGEN=$(find -type d -name ueb*)
+UEBUNGEN=$(find -type d -name 'ueb*')
 
 # log function
 log() {
