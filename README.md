@@ -39,6 +39,10 @@ all your files into `out/ueb*.pdf`. I will extend the client in the future to al
 single compiling processes and error messages. Currently the output of pdflatex will
 be hidden.
 
+If you wanto to only compile a single folder, use `./build.sh <UEBNR>` where `<UEBNR>`
+is equal to the digit combination in your folder `ueb<UEBNR>`. _(Maybe I'll update this
+to be more user-friendly if we enter 2 digit numbers.)_
+
 ## Requirements
 
 In order to use this stuff:
@@ -74,6 +78,7 @@ store some secrets in your fork/private repo and receive emails that always incl
           FILENAMES=$(find ./out -type f -name "*.pdf" | tr '\n' ',')
           echo "Found $FILENAMES"
           echo "::set-output name=PDFS::${FILENAMES%,}"
+          echo "::set-output name=COMMIT::$(git log --format=%B -n 1 $GITHUB_SHA)"
       - name: Send email with all pdfs
         uses: dawidd6/action-send-mail@v2
         with:
@@ -82,7 +87,7 @@ store some secrets in your fork/private repo and receive emails that always incl
           username: ${{secrets.MAIL_USERNAME}}
           password: ${{secrets.MAIL_PASSWORD}}
           subject: Automated BuK PDFs
-          body: All documents have been generated and attached here.
+          body: ${{steps.extract-filenames.outputs.PDFS}}
           from: ${{secrets.MAIL_USERNAME}}
           to: ${{secrets.MAIL_RECEIVERS}}
           attachments: ${{steps.extract-filenames.outputs.PDFS}}

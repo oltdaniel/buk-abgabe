@@ -2,6 +2,7 @@
 
 # get all folders that are important to us
 UEBUNGEN=$(find -type d -name 'ueb*')
+FORCED_UEB=$1
 
 # log function
 log() {
@@ -40,8 +41,8 @@ if [[ $TUTORIUM -lt 10 ]]; then
     TUTORIUM="0$TUTORIUM"
 fi
 
-# for each uebung
-for ueb in $UEBUNGEN; do
+compile_ueb() {
+    local ueb=$1
     # check if tex file exists 
     if [[ ! -f $ueb/main.tex ]]; then
         log "ERR" "File $ueb/main.tex not found."
@@ -55,13 +56,23 @@ for ueb in $UEBUNGEN; do
         exit 1
     fi
     # extract further data for the filename
-    UEBUNGSNUMMER=$(cat $ueb/main.tex | grep 'setuebungsnr' | awk 'NR == 2 {print $1}' RS='{' FS='}')
+    local UEBUNGSNUMMER=$(cat $ueb/main.tex | grep 'setuebungsnr' | awk 'NR == 2 {print $1}' RS='{' FS='}')
     if [[ $UEBUNGSNUMMER -lt 10 ]]; then
-        UEBUNGSNUMMER="0$UEBUNGSNUMMER"
+        local UEBUNGSNUMMER="0$UEBUNGSNUMMER"
     fi
     # create filename
-    FILENAME="Blatt-${UEBUNGSNUMMER}_Tutorium-${TUTORIUM}_Gruppe-${GRUPPE}.pdf"
+    local FILENAME="Blatt-${UEBUNGSNUMMER}_Tutorium-${TUTORIUM}_Gruppe-${GRUPPE}.pdf"
     # copy and cleanup
     cp $ueb/main.pdf out/$FILENAME
     rm $ueb/main.pdf $ueb/main.aux $ueb/main.log $ueb/main.out
+}
+
+if [[ -d "ueb$FORCED_UEB" ]]; then
+    compile_ueb "ueb$FORCED_UEB"
+    exit 0
+fi
+
+# for each uebung
+for ueb in $UEBUNGEN; do
+    compile_ueb $ueb
 done
